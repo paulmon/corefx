@@ -99,7 +99,16 @@ namespace System.IO.Tests
             string source = GetTestFilePath();
             string destination = GetTestFilePath();
             File.Create(source).Dispose();
-            Assert.Throws<IOException>(() => Move(source + Path.DirectorySeparatorChar, destination));
+            if (PlatformDetection.IsWindowsIoTCore)
+            {
+                Move(source + Path.DirectorySeparatorChar, destination);
+                Assert.True(File.Exists(destination));
+                Assert.False(File.Exists(source));
+            }
+            else
+            {
+                Assert.Throws<IOException>(() => Move(source + Path.DirectorySeparatorChar, destination));
+            }
         }
 
         [Fact]
@@ -109,7 +118,16 @@ namespace System.IO.Tests
             string source = GetTestFilePath();
             string destination = GetTestFilePath();
             File.Create(source).Dispose();
-            Assert.Throws<IOException>(() => Move(source + Path.AltDirectorySeparatorChar, destination));
+            if (PlatformDetection.IsWindowsIoTCore)
+            {
+                Move(source + Path.DirectorySeparatorChar, destination);
+                Assert.True(File.Exists(destination));
+                Assert.False(File.Exists(source));
+            }
+            else
+            {
+                Assert.Throws<IOException>(() => Move(source + Path.AltDirectorySeparatorChar, destination));
+            }
         }
 
         [Fact]

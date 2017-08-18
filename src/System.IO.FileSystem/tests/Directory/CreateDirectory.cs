@@ -247,6 +247,10 @@ namespace System.IO.Tests
             {
                 Assert.All(paths, path => { Assert.Throws<PathTooLongException>(() => Create(path)); });
             }
+            else if (PlatformDetection.IsWindowsIoTCore)
+            {
+                Assert.All(paths, path => { Assert.Throws<IOException>(() => Create(path)); });
+            }
             else
             {
                 Assert.All(paths,
